@@ -146,3 +146,42 @@ To solve, could just prevent context switching while $L$ has the mutex (disable 
 
 A better solution is priority inheritance. $L$, while it has the mutex, will execute with
 $H$'s priority, so $M$ cannot preempt it.
+
+
+## Multiprocessor Scheduling
+
+### Processor Affinity
+Each core has its own cache. After some time after executing on
+a core, most of its state will be in that core's cache.
+
+When this process runs again, it would make sense that it should run again
+on that core.
+
+This is **processor affinity**.
+
+There is *soft affinity*, where the scheduler will make a best effort
+to give its preferred core.
+
+There is *hard affinity*, where the scheduler **must** give the process
+its preferred core.
+
+### Load Balancing
+If we have 4 processes, it would be bad to have 100% utilization on 1 core and
+3 cores doing nothing.
+
+Want to **load balance** between the different cores.
+
+There is **push migration**, where a task periodically checks how busy each core is.
+Moves processes around to balance things out.
+
+There is **pull migration**, where a core with nothing to do "steals" a process
+from the queue of a busy core.
+
+### Hyperthreading
+Two "threads" running on 1 core, making 1 core look like 2 cores.
+
+While one thread is stalling on a memory operation, the other thread can
+use the core for anything else.
+
+![Hyperthreading](./images/hyperthreading.png)
+

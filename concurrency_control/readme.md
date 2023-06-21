@@ -16,7 +16,7 @@ mutex_unlock();
 
 ## The Semaphore
 
-```
+```C
 sem_wait();
 sem_post();
 ```

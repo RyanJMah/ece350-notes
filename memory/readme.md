@@ -53,6 +53,93 @@ you can't anymore (i.e, if you split again, the user won't get the
 memory they asked for).
 
 
+## Caching
+
+The effective access time for a system with 1 level of cache is the following.
+
+$h \cdot t_c + (1 - h)t_m$
+
+Where $h$ is the hit ratio, $t_c$ is time needed to load from cache, and
+$t_m$ is time needed to load from memory.
+
+### Eviction Algorithms
+
+#### The Optimal Algorithm
+Replace the page that will be used most distantly in the future. Impossible to
+implement without clairvoyance.
+
+Useful for benchmarking though.
+
+#### Not Recently Used
+Store 2 status bits associated with each page, `R` and `M`. `R` bit is set whenever
+a page is referenced, `M` bit is set when the page is written to (modified).
+
+Periodically, `R` bit is cleared. When a TLB entry needs to be evicted, it will
+do it in the following order:
+
+1. Not referenced, not modified
+2. Not referenced, modified
+3. Referenced, not modified
+4. Referenced, modified
+
+OS will prefer to remove a page from the lowest to highest.
+
+#### First-In First-Out
+Literally what the title is. Performance is bad.
+
+#### A Second Chance (The Clock)
+Improvement on FIFO. Give pages "a second chance" based on whether the `R`
+bit is set.
+
+If the oldest page has recently been referenced, the R bit is cleared. The search
+then goes backwards to next oldest page. Repeat until you find a page that has the `R`
+bit clear, then evict it.
+
+#### Least Recently Used (LRU)
+The page that is going to be evicted is the one that has been accessed most distantly
+in the past.
+
+Implement with a cyclic doubly linked linked list. When a page in cache is accessed,
+move that page to the back of the list. Gives O(1) time.
+
+#### Not Frequently Used (NFU)
+Similar to LFU, but can be implemented in SW without HW support.
+
+Each page entry has an associated software counter, which starts at 0. Whenever the `R`
+bit would have been updated to 1, 1 is added to the counter. When a page is to be evicted,
+the page with the lowest counter value is the one that is replaced.
+
+The counters need to decrement over time, otherwise they will increment forever until
+overflow.
+
+We need **aging**: counters are shifted to the right by 1 before the 1 is added. Instead
+of adding 1, set the left most bit to 1. Get something like this:
+
+```
+0b10000000 --> 0b01000000 --> ... --> 0b00000001
+```
+
+Still evict the lowest value page. Lose some history, but whatever I guess.
+
+### Choosing an Algorithm
+LRU is best, but needs HW to make it not very slow. If no HW, NFU + Aigin is the best we
+can do.
+
+
+### Local and Global Replacement
+Should a TLB miss from process $P_1$ be able to evict a TLB entry that belongs to $P_2$?
+
+If so, then that's **global replacement**.
+
+If not, **local replacement**.
+
+Local algorithms give each process some (roughly) fixed number of pages in the cache.
+
+Global algorithms dynamically allocate cache space to different programs based on their
+needs - number of pages in TLB for each process can vary over time.
+
+
+
 ## Paging
 
 ![Logical and Physical Memory](./images/logical_and_physical_memory.png)

@@ -209,11 +209,14 @@ the numbers do not correspond to the above image).
 <br>
 
 2. Look in the TLB for the frame number
+   * If found in TLB, we're good. Just access the memory with the
+     frame number we found.
 
 <br>
 
 3. If TLB miss, try to get the frame number from the page table in main memory
-   * If found, update the TLB using whatever eviction policy (e.g., LFU)
+   * If found in main memory, update the TLB using whatever eviction
+     policy (e.g., LFU)
 
 <br>
 

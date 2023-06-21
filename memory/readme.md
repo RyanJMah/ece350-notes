@@ -212,34 +212,30 @@ the numbers do not correspond to the above image).
 
 <br>
 
-3. If TLB miss, load the frame number from main memory, update TLB using
-   whatever eviction policy (e.g., LFU)
+3. If TLB miss, try to get the frame number from the page table in main memory
+   * If found, update the TLB using whatever eviction policy (e.g., LFU)
 
 <br>
 
-4. Attempt to access the frame which was read from the page table in steps 3/4.
+4. If the frame number cannot be found in the page table, that means that the
+   page has been swapped out to disk. This is a page fault.
 
 <br>
 
-5. Get a page fault (OS trap) if the frame we are trying to access
-   is swapped out to disk
-
-<br>
-
-6. Choose a page to evict according to the eviction policy (e.g., LFU)
+5. Choose a page to evict according to the eviction policy (e.g., LFU)
     * If the page to evict has been modified, queue a write
       back to disk
         * Wait for the write to complete if so
 
 <br>
 
-7. Read the frame we are trying to access from disk
+6. Read the frame we are trying to access from disk
 
 <br>
 
-8. Update page tables to reflect the newly read and swapped out frames
+7. Update page tables to reflect the newly read and swapped out frames
 
 <br>
 
-9. Restart the execution of the process that caused the page fault,
+8. Restart the execution of the process that caused the page fault,
    at the instruction that caused the page fault

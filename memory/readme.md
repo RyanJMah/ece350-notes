@@ -216,7 +216,7 @@ the numbers do not correspond to the above image).
 
 3. If TLB miss, try to get the frame number from the page table in main memory
    * If found in main memory, update the TLB using whatever eviction
-     policy (e.g., LFU)
+     policy (e.g., LFU), then access the memory
 
 <br>
 

@@ -217,7 +217,8 @@ the numbers do not correspond to the above image).
 
 <br>
 
-4. If the frame number cannot be found in the page table, that means that the
+4. If the frame number cannot be found in the page table (i.e., there are no frames
+   that currently have the page we're looking for), that means that the
    page has been swapped out to disk. This is a page fault.
 
 <br>

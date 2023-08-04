@@ -213,4 +213,30 @@ Not O(1) unfortunately.
   * Higher priority processes decay faster than low priority processes (remember, we pick the **lowest** `vruntime` from the queue)
   * "Nice" processes will have an artificially higher `vruntime`, and "not nice" processes will have a lower `vruntime`
 
-Under this system, 
+Under this system, tasks that use a lot of CPU time get lower priority, while tasks that get blocked a lot (e.g., IO) get higher priority.
+
+CFS also introduces group scheduling - designate a set of processes as belonging to a group
+
+* Useful when a process spawns lots of threads
+* Instead of treating every thread equally, a multi-threaded application's threads are pooled together
+
+## A Decade of Wasted Cores
+
+A research paper published in 2016, exposed four significant bugs in the Linux multi-core schedule.
+
+1. **The Group Imbalance Bug**
+
+   * Cores attempt to steal tasks from other cores if the *average* load of the victim core is higher than the current core
+   * If we use the minimum load instead, we get a big increase in performance
+
+2. **Scheduling Group Construction**
+
+   [](./images/core_groups.png)
+
+   * If groups are two hops (cores) apart, the load balancing may not steal them
+   * All groups are constructed from the perspective of core 0
+     * Load balancing running on core 31 won't steal from a neighbour core since it is more than 2 hops from core 0
+
+3. **Overload on Wakeup**
+
+   * 

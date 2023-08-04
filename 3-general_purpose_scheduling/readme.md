@@ -153,5 +153,3 @@ Two "threads" running on 1 core, making 1 core look like 2 cores.
 While one thread is stalling on a memory operation, the other thread can use the core for anything else.
 
 ![Hyperthreading](./images/hyperthreading.png)
-
-\

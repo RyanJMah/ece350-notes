@@ -1,4 +1,4 @@
-# ECE 350 Concurrency Control Notes
+# ECE 350 - Concurrency Control
 
 ## The Mutex
 

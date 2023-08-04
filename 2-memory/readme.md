@@ -1,4 +1,4 @@
-# ECE 350 Memory Notes
+# ECE 350  - Memory
 
 ## Dynamic Memory Allocation
 

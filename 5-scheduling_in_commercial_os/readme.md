@@ -198,5 +198,19 @@ O(1) (technically), because of the following:
 3. Remove task from queue O(1)
 4. Swap active and expired queues O(1)
 
-### Linux Completely Fair Scheduler
+### Linux Completely Fair Scheduler (CFS)
 
+Not O(1) unfortunately.
+
+* Ready queue implemented as red-black tree, processes are inserted based on linear ordering of **`vruntime`**
+  * Tree remains balanced, so insert/removal time is $O( ln(n) )$. We pick the task with the smallest `vruntime` to run next
+
+* Assigns a proportion of CPU time to each task based on the nice value. No fixed timeslice, but a dynamic timeslice called **target latency**
+  * Target latency can be adjusted depending on how many tasks in the ready queue, etc.
+
+* `vruntime` is a metric that accounts for the amount of time a task has been executing and the niceness value of a task
+  * There is a decay factor so that tasks don't get starved
+  * Higher priority processes decay faster than low priority processes (remember, we pick the **lowest** `vruntime` from the queue)
+  * "Nice" processes will have an artificially higher `vruntime`, and "not nice" processes will have a lower `vruntime`
+
+Under this system, 

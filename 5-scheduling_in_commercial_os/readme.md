@@ -140,6 +140,63 @@ In each class, threads have different priorities relative to each other. Lower n
 * Real-time priorities are (0-99)
 * Other priorities are (100-139)
 
-**`SCHED_FIFO`**
+#### FIFO Scheduling Policy
 
-* asdf
+1. Wil only preempt another FIFO thread if one of the following is true:
+
+   1. Another FIFO thread of higher priority becomes ready
+
+   2. Current FIFO thread gets blocked (e.g., on IO)
+
+   3. Current FIFO yields
+
+2. If a FIFO thread in preempted, it is placed in the queue associated with its priority
+
+3. If a FIFO thread becomes ready and is of higher priority of the currently running thread, the currently running thread is preempted
+
+#### Round-Robin Scheduling Policy
+
+Same as FIFO, but timeslicing is implemented.
+
+### Linux O(1) Scheduler (Non-Realtime)
+
+Designed to fix shortcomings of traditional UNIX scheduler, which were:
+
+1. Not good at handling large numbers of processes
+   * O(n) algorithm
+2. Difficulty with multi-processor systems
+   * Single run queue
+     * No processor affinity
+   * Single run queue lock
+     * All processors need to wait for lock, O(n)
+   * Cannot preempt running processes
+     * Need to wait for timeslice
+
+Kernel maintains two data structures:
+
+```C
+struct prio_array
+{
+	int32_t          nr_active; 			// Number of tasks in this array
+    uint64_t         bitmap[BITMAP_SIZE];	// Priority bitmap
+    struct list_head queue[MAX_PRIO];       // Priority queues
+}
+```
+
+Two queues per priority level - active queue structure, as well as an expired queue structure. Bitmap array is of size to provide one bit per priority level - purpose of bitmap is to indicate which queues are empty.
+
+The highest priority queue is chosen. If there are multiple tasks in the queue, they are scheduled via Round-Robin.
+
+If a task runs to completion within its timeslice, it goes back to the ready queue. If it gets preempted by the timeslice, it goes into the expired queue. When the active queue is empty, it is swapped with the expired queue, then execution continues.
+
+O(1) (technically), because of the following:
+
+1. Add task to the queue, O(1)
+2. Find next task
+   * Need to look a linear search of the bitmap
+   * Bitmap has a constant length though, so it's **technically** O(1)
+3. Remove task from queue O(1)
+4. Swap active and expired queues O(1)
+
+### Linux Completely Fair Scheduler
+

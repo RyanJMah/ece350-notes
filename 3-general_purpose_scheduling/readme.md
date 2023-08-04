@@ -153,3 +153,29 @@ Two "threads" running on 1 core, making 1 core look like 2 cores.
 While one thread is stalling on a memory operation, the other thread can use the core for anything else.
 
 ![Hyperthreading](./images/hyperthreading.png)
+
+## Evaluating Scheduling Algorithms
+
+### Deterministic Modelling
+
+Kinda like unit tests.
+
+Test scenario has inputs and outputs. Evaluate the outputs to check for both "correctness" and to assess the performance.
+
+* Correctness
+  * Assume that the algorithms are correct in their implementation
+  * Correctness may mean something like, tasks don't starve or whatever
+
+### Queuing Theory
+
+Real behaviour of most systems look very different from how the deterministic approach models it. Real systems have lots of randomness in them.
+
+This is basically Zarnett advertising his 4th year course (which I think I will be taking lol).
+
+### Simulations and Emulation
+
+A simulation, if designed appropriately, will account for more things like timer interrupts and context switch times.
+
+### The Real World
+
+Running on real HW is always best.

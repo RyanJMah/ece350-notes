@@ -62,7 +62,7 @@ before, average them out.
 
 Best averaging method is exponential averaging. Apply weighting factor $0 \le \alpha \le 1$.
 
-$S_{n+1} = \alpha T_n + (1 - \alpha)S_n$
+$$S_{n+1} = \alpha T_n + (1 - \alpha)S_n$$
 
 ![Exponential Averaging](./images/expontial_averaging.png)
 

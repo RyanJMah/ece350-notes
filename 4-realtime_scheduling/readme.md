@@ -91,9 +91,13 @@ EDF is **optimal** (i.e., it will always find a feasible schedule if one exists)
 To implement EDF, a priority queue is reasonable. Need to make sure that soft real-time tasks with earlier deadlines don't get priority over hard real-time tasks though.
 
 **UB Test for EDF:**
+
+
 $$
 U = \sum_{k=1}^{N}{\frac{C_k}{\text{min}(D_k, \tau_k)}} \le 1
 $$
+
+
 where $D_k$ is the deadline for task $k$, and $\tau_k$ is the period of task $k$.
 
 #### Deadline Interchange
@@ -132,9 +136,13 @@ RMS is **optimal** if:
 * Tasks are *harmonic* (their periodic are integer multiples of each other)
 
 **UB Test for RMS**
+
+
 $$
 U = \sum_{k=1}^{N}{\frac{C_k}{\tau_k}} \le n(2^{1/n} - 1)
 $$
+
+
 
 ### Deadline-Monotonic Scheduling (DMS)
 

@@ -224,19 +224,19 @@ CFS also introduces group scheduling - designate a set of processes as belonging
 
 A research paper published in 2016, exposed four significant bugs in the Linux multi-core schedule.
 
-1. **The Group Imbalance Bug**
+![](./images/core_groups.png)
 
+1. **The Group Imbalance Bug**
    * Cores attempt to steal tasks from other cores if the *average* load of the victim core is higher than the current core
    * If we use the minimum load instead, we get a big increase in performance
-
 2. **Scheduling Group Construction**
-
-   [](./images/core_groups.png)
-
    * If groups are two hops (cores) apart, the load balancing may not steal them
    * All groups are constructed from the perspective of core 0
      * Load balancing running on core 31 won't steal from a neighbour core since it is more than 2 hops from core 0
-
 3. **Overload on Wakeup**
-
-   * 
+   * "Too much" processor affinity
+     * If a thread sleeps on core 1, then it gets unblocked later by another thread, it will be scheduled on core 1, even if other cores are idle
+4. **Missing Scheduling Domains**
+   * Error during refactoring
+   * When a core was removed and re-added, a step was skipped after refactoring changes
+     * Caused all threads of an application to run on a single core instead of all of them

@@ -181,6 +181,9 @@ Looking up a frame in the page table looks like the following.
 2. Load frame number from LUT in main memory, replace some TLB entry
    with the entry just loaded from main memory (e.g., LRU)
 
+The page table can also take in a process ID to see if a memory access is invalid
+or not.
+
 
 ## Virtual Memory
 

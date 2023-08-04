@@ -68,9 +68,13 @@ Two methods of estimating WCET:
 ### Utilization Bound Test (UB Test)
 
 CPU utilization of a set of tasks is:
+
+
 $$
 U = \sum_{i=1}^{N}{\frac{C_i}{\tau_i}}
 $$
+
+
 Max CPU utilization is 1, otherwise the tasks aren't schedulable.
 
 ## Scheduling Algorithms

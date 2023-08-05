@@ -78,3 +78,77 @@ Keeps the devices as an index to the **system-wide open-file table**.
 Explains why if you print a file descriptor, you just see a number - it's the index to the open-file table.
 
 ![](./images/unix_kernel_io_structures.png)
+
+## Syscalls to HW Operations
+
+![](./images/syscall_to_hw_op.png)
+
+1. A process issues a `read()` (assuming the file is already open).
+2. Syscall checks parameters for correctness. If data is in cache or buffer, return it right away.
+3. Block process waiting for IO
+4. Device driver allocates buffer for data
+5. Device driver may either poll for status, wait for interrupt, or for DMA interrupt
+6. On interrupt, copy data to driver's buffer
+7. Copy data to address space of requesting process, unblock the process
+
+## Buffering
+
+Area of memory that stores data being transferred. Good way to deal with speed mismatch between devices.
+
+Buffers can be implemented as a solution to the producer-consumer problem:
+
+```C
+void producer(void)
+{
+    // [produce item]
+    wait( spaces );
+
+    wait( mutex );
+    // [add item to buffer]
+    post( mutex );
+
+    post( items );
+}
+
+void consumer(void)
+{
+    wait( items );
+
+    wait( mutex );
+    // [remove item from buffer]
+    post( mutex );
+
+    post( spaces );
+
+    // [consume item]
+}
+```
+
+### Double Buffering
+
+While one buffer is being emptied, the other one is being written to. Decouples the producer and consumer.
+
+Common use is to have a DMA copy data to one buffer, while consumer reads data from the other. On DMA interrupt, switch DMA to write to the other buffer, then process the data on the one that the DMA has just written to.
+
+## IO Scheduling and Performance
+
+Analogy:
+
+* Imagine you need to go to the E7, SLC, and the plaza
+  * You wouldn't do E7, to SLC, then plaza
+    * Very inefficient route
+  * You want to plan your route to minimize distance traveled
+  * Want to avoid backtracking
+
+Same for IO, many IO devices have non-uniform access time (e.g., disk). Tradeoff between speed and fairness of requests.
+
+## Security
+
+Most operating systems let drivers run in the kernel. There is an attack known as "Bring Your Own Vulnerable Driver" (BYOVD).
+
+* Convince an admin to intentionally install your vulnerable driver (they don't know that its vulnerable)
+* Exploit your bad driver
+
+Need to be able to "revoke" previously-approved drivers.
+
+Some operating systems provide user-space interfaces to do drivers, which also helps.

@@ -177,9 +177,9 @@ Kernel maintains two data structures:
 ```C
 struct prio_array
 {
-	int32_t          nr_active; 			// Number of tasks in this array
-    uint64_t         bitmap[BITMAP_SIZE];	// Priority bitmap
-    struct list_head queue[MAX_PRIO];       // Priority queues
+    int32_t          nr_active;                 // Number of tasks in this array
+    uint64_t         bitmap[BITMAP_SIZE];       // Priority bitmap
+    struct list_head queue[MAX_PRIO];           // Priority queues
 }
 ```
 

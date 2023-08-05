@@ -5,21 +5,21 @@
 #### First Fit
 Look at the start of memory and check each free block. If the block is big enough, split it (if needed) to allocate the memory.
 
-Time complexity of O(n), where n is the number of blocks.
+Time complexity of $O(n)$, where n is the number of blocks.
 
 #### Next Fit
 Modification of first-fit. Keep track of where the last block was allocated, start the next search (allocation) from there.
 
 Prevents situation of a lot of small, un-allocated blocks all concentrated at the start of memory.
 
-Time complexity is O(n).
+Time complexity is $O(n)$.
 
 #### Best Fit
 Considering all blocks, choose the smallest block that is as least as big as N. Produces the smallest remaining unallocated space at the end of the block (less internal fragmentation)
 
-Either check every available block (`O(n)`) or keep blocks sorted by increasing size (`O(n)`).
+Either check every available block $( \; O(n) \; )$ or keep blocks sorted by increasing size $( \; O(n) \; )$.
 
-If AVL tree is used, can get it to `O( ln(n) )`
+If AVL tree is used, can get it to $O(\ln(n))$.
 
 #### Worst Fit
 Opposite of best fit. Instead of choosing the smallest block, choose the largest block. When the block is split, the remaining free block is hopefully large enough to be useful.

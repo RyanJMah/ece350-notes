@@ -88,3 +88,36 @@ VFS in Linux has four main objects:
 A B-Tree is the best way to implement the directory structure.
 
 Use Google or chatgpt for understanding B-Trees, too lazy to write it down here.
+
+## File Allocation Methods
+
+Similar to dynamic memory allocation, need a strategy for how to allocate disk space for files.
+
+Three major ways:
+
+1. **Contiguous**
+2. **Linked**
+3. **Indexed**
+
+### Contiguous Allocation
+
+File occupies a set of contiguous blocks on disk. A file at block $b$ that is $n$ blocks in size would take up blocks $b, b+1, ..., b+(n-1)$.
+
+* Advantageous, since seek time for contiguous blocks on disk is very small.
+
+<br>
+
+We just need to maintain $b$ and $n$.
+
+![](./images/contiguous_allocation.png)
+
+Like dynamic allocation, this approach suffers from **external fragmentation**. Since blocks are fixed size, there is a bit of **internal fragmentation** as well in the las block of the file.
+
+* To fix the external fragmentation, **compaction** can be scheduled
+  * When to schedule it? There are no really great times...
+
+Also a risk of allocating too little space.
+
+* We may be able to just allocate more at the end, maybe not (if the next block is used by another file)
+  * In that case, need to reallocate the whole file
+

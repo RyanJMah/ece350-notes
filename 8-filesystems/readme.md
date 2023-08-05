@@ -105,8 +105,6 @@ File occupies a set of contiguous blocks on disk. A file at block $b$ that is $n
 
 * Advantageous, since seek time for contiguous blocks on disk is very small.
 
-<br>
-
 We just need to maintain $b$ and $n$.
 
 ![](./images/contiguous_allocation.png)
@@ -121,3 +119,124 @@ Also a risk of allocating too little space.
 * We may be able to just allocate more at the end, maybe not (if the next block is used by another file)
   * In that case, need to reallocate the whole file
 
+### Linked Allocation
+
+Solves some of the problems with contiguous allocation.
+
+For each file, maintain a linked-list of blocks, and the blocks can be located anywhere on the disk.
+
+* Directory listing is just a pointer to the first and last blocks (head and tail)
+
+* If a new file is created, it will be created with size zero, and the head and tail pointers are null
+  * When a new block is needed, it can come from anywhere, and will just be added to the list
+
+![](./images/linked_allocation.png)
+
+Compaction isn't an issue anymore, but need to follow a bunch of pointers to read the whole file (annoying).
+
+A possible solution to following so many pointers (and the overhead of maintaining so many) is to group the blocks into clusters.
+
+* A cluster is composed of blocks (say, 4 maybe...)
+* The linked list is now a list of clusters, as opposed to a list of blocks
+
+This solution also improves disk access time, since the reader head has to move around less.
+
+#### FAT
+
+One variation of linked allocation is the **File Allocation Table** (FAT), used by MS-DOS. FAT32 is still used today for USB flash drives, since it is readable in Windows, OSX, and Linux.
+
+FAT works like this:
+
+* At the beginning of the disk, there is a table to maintain file allocation data (hence the name)
+  * The table has one entry for each block, and is indexed by block number
+* The block has a pointer to the next block
+
+* An unused block has a table value of 0
+  * To allocate a new block, find the first zero-valued entry
+
+![](./images/fat.png)
+
+The File Allocation Table itself should be cached in RAM.
+
+### Indexed Allocation
+
+With linked allocation, there is still a problem where in order to access the some part in the middle of a file, we need to traverse the whole linked-list $( \; O(n) \; )$.
+
+Indexed allocation takes all of the pointers and puts them into one block - an **index block**.
+
+* So, the first block of the block contains a whole bunch of pointers
+* To get to block $i$, just go to index $i$ of the index block to get the location of block $i$
+
+![](./images/indexed_allocation.png)
+
+But then, what if we run out of space in the index block? A few solutions:
+
+1. **Linked Scheme**
+   * Use a linked-list of index blocks
+
+2. **Multilevel Index**
+   * Just use multiple index blocks
+   * This approach can still run out of indexes though
+     * Requires defining a maximum file size
+
+3. **Combined Scheme**
+   * "All of the above"
+   * Used in UNIX, 15 pointers in the index block of an inode
+     * 12 of them point to file data
+     * Next three pointers refer to index blocks
+
+![](./images/inode.png)
+
+## Free Space
+
+System needs to keep track of the free space as well.
+
+* **Bit Vectors**
+  * $O(n)$ search basically
+* **Linked List**
+  * Linked list of free space
+
+## Filesystem Corruption
+
+Power loss can cause filesystem corruption.
+
+Can check for corruption (inconsistent data) periodically (e.g., on boot). Many operating systems do this.
+
+### Journaling
+
+Instead of periodically checking for corruption, could just prevent it all together.
+
+We need a concept of the **transaction**.
+
+* All metadata changes are written sequentially to a log file
+  * Once changes are written to log, control may return to program that requested the filesystem operation
+* When an entire transaction is completed, it is removed from the log file
+
+If the system crashes, if the log file contains uncompleted transactions, then we can undo the in-progress operations and go back to the filesystem state before the transaction.
+
+## NTFS (Windows File System)
+
+NTFS uses journaling, and supports large disks and large files.
+
+Uses different storage levels:
+
+1. **Sector**
+   * Smallest physical storage unit on disk (512 bytes usually)
+2. **Cluster**
+   * One or more contiguous sectors (grouped in a power of 2)
+   * The fundamental unit of allocation in NTFS
+3. **Volume**
+   * A logical partition on disk, consisting of one or more clusters
+
+![](./images/ntfs.png)
+
+The *Master File Table* (MFT) contains information about all the files and folders. Following the MFT, a block is allocated to system files that include important system info:
+
+1. **MFT2**
+   * Copy of the first few rows of the MFT (in case the original one gets corrupted)
+2. **Log File**
+   * Journal transaction log
+3. **Cluster Bitmap**
+   * Bitmap showing which of the clusters are in use
+4. **Attribute Definition Table**
+   * Attribute types supported on this volume

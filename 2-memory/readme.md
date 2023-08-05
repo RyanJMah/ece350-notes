@@ -163,21 +163,35 @@ With virtual memory, a process's memory accesses look like this (note: the numbe
 1. Check if memory reference is valid or invalid (is it trying to access a page that doesn't belong to it?)
     * If the access is invalid, throw a segmentation fault
 
+<br>
+
 2. Look in the TLB for the frame number
    * If found in TLB, we're good. Just access the memory with the frame number we found.
+
+<br>
 
 3. If TLB miss, try to get the frame number from the page table in main memory
    * If found in main memory, update the TLB using whatever eviction
      policy (e.g., LFU), then access the memory
 
+<br>
+
 4. If the frame number cannot be found in the page table (i.e., there are no frames that currently have the page we're looking for), that means that the page has been swapped out to disk. This is a page fault.
+
+<br>
 
 5. Choose a page to evict according to the eviction policy (e.g., LFU)
     * If the page to evict has been modified, queue a write back to disk
         * Wait for the write to complete if so
 
+<br>
+
 6. Read the frame we are trying to access from disk
 
+<br>
+
 7. Update page tables to reflect the newly read and swapped out frames
+
+<br>
 
 8. Restart the execution of the process that caused the page fault, at the instruction that caused the page fault

@@ -240,3 +240,57 @@ The *Master File Table* (MFT) contains information about all the files and folde
    * Bitmap showing which of the clusters are in use
 4. **Attribute Definition Table**
    * Attribute types supported on this volume
+
+## RAID
+
+"Redundant Array of Independent Disks" (previously, "Redundant Array of Inexpensive Disks").
+
+Zarnett doesn't talk about any of the detail on how it actually works, so I won't either.
+
+RAID has multiple different "levels" of redundancy:
+
+**RAID 0** - "What Redundancy?"
+
+* Disk striping
+  * Splits the data and files across multiple disks
+* Faster
+  * Writes can be done in parallel
+
+**RAID 1** - "Mirror, mirror"
+
+* Each data that appears on each disk is replicated
+
+* Read speed is improved
+  * Any piece of data could be found of one of two disks, can just read from a less busy drive
+
+* No real write penalty
+  * Can just write to one disk, but the write isn't truly complete until the write is replicated
+    * The duplication can be done asynchronously though
+
+* What if duplication fails?
+  * Journaling can fix this
+
+**RAID 2** - Bit Parity
+
+* Hamming codes
+* One disk store data, other disk store parity bits
+  * Can use the parity bits to recover single-bit corruption
+
+**RAID 3** - Byte Parity
+
+* Bytes spread across the different disks
+* One disk store data, other disk store parity
+
+**RAID 4** - Byte Parity
+
+* Blocks spread across the different disks
+* Unlike RAID 2 or 3, each disk can independently access different blocks at once
+
+**RAID 5** - Distributed Block Parity
+
+* Instead of one disk dedicated to parity, the parity info is distributed across all disks
+* The most common parity RAID system
+
+**RAID 6**
+
+* RAID 5 but with more metadata that allows recovery from disk failures

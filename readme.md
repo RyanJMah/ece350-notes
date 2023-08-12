@@ -8,3 +8,5 @@
 * [IO Devices and Drivers](./6-io_devices_and_drivers/readme.md)
 * [Disk Scheduling](./7-disk_scheduling/readme.md)
 * [Filesystems](./8-filesystems/readme.md)
+* [Reliability](./9-reliability/readme.md)
+* [Virtualization and Containers](./10-virtualization/readme.md)

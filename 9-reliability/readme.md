@@ -136,7 +136,7 @@ Moral of the story: *there should be no single point of failure*
 
 Again, look at [ECE 455 notes](https://github.com/RyanJMah/ece455-notes/blob/master/4-reliability/readme.md).
 
-## Clock Synchronization in Distributed Systems
+### Clock Synchronization in Distributed Systems
 
 How do we know what time it is? How do get get everyone to know what time it is, and agree on it?
 

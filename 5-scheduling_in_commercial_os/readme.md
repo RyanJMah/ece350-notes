@@ -205,7 +205,7 @@ Not O(1) unfortunately.
 * Ready queue implemented as red-black tree, processes are inserted based on linear ordering of **`vruntime`**
   * Tree remains balanced, so insert/removal time is $O( ln(n) )$. We pick the task with the smallest `vruntime` to run next
 
-* Assigns a proportion of CPU time to each task based on the nice value. No fixed timeslice, but a dynamic timeslice called **target latency**
+* Assigns a proportion of CPU time to each task based on the nice value. No fixed timeslice, but a dynamic timeslice called ***target latency***
   * Target latency can be adjusted depending on how many tasks in the ready queue, etc.
 
 * `vruntime` is a metric that accounts for the amount of time a task has been executing and the niceness value of a task
@@ -214,6 +214,8 @@ Not O(1) unfortunately.
   * "Nice" processes will have an artificially higher `vruntime`, and "not nice" processes will have a lower `vruntime`
 
 Under this system, tasks that use a lot of CPU time get lower priority, while tasks that get blocked a lot (e.g., IO) get higher priority.
+
+
 
 CFS also introduces group scheduling - designate a set of processes as belonging to a group
 

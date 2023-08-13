@@ -85,9 +85,31 @@ VFS in Linux has four main objects:
 
 ![](./images/directory.png)
 
-A B-Tree is the best way to implement the directory structure.
+### B-Trees
 
-Use Google or chatgpt for understanding B-Trees, too lazy to write it down here.
+A ***B-Tree*** is the best way to implement the directory structure.
+
+* Each node has ***at most*** $2d-1$ elements and $2d$ children
+* Every node (except the root) has ***at least*** $d-1$ elements and $d$ children
+* A non-leaf node with $k$ children has $k-1$ children
+
+![](./images/b_tree.PNG)
+
+**Insertion**
+
+1. Traverse tree to get to the node where the element will be inserted.
+
+2. If the node has fewer than $2d-1$ elements, just insert into the node then return.
+
+3. If the node is full (has $2d-1$ elements), split the node around the middle element into two nodes of $d-1$ elements.
+
+4. Promote the middle element to a higher level.
+
+5. Split the parent node if the parent node is full.
+
+6. Promote recursively all the way up to the root node. If the root node is full, the height of the tree will increase by 1.
+
+<br>
 
 ## File Allocation Methods
 

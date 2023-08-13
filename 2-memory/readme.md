@@ -195,3 +195,12 @@ With virtual memory, a process's memory accesses look like this (note: the numbe
 <br>
 
 8. Restart the execution of the process that caused the page fault, at the instruction that caused the page fault
+
+## Page Fault vs Segmentation Fault
+
+**Page Fault**
+* Page is not present in RAM, but there exists an entry for it in the page table
+   * In the page table, it will be marked as being swapped to disk
+
+**Segmentation Fault**
+* Page number does not exist in the page table at all

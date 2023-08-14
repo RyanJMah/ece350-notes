@@ -89,8 +89,8 @@ VFS in Linux has four main objects:
 
 A ***B-Tree*** is the best way to implement the directory structure.
 
-* Each node has ***at most*** $2d-1$ elements and $2d$ children
-* Every node (except the root) has ***at least*** $d-1$ elements and $d$ children
+* Each node has ***at most*** $2d$ elements
+* Every node (except the root) has ***at least*** $d$ elements
 * A non-leaf node with $k$ children has $k-1$ children
 
 ![](./images/b_tree.PNG)

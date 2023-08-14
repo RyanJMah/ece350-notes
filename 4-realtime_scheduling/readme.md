@@ -154,7 +154,21 @@ Can sometimes find a feasible schedule where RMS cannot, if tasks are non-simply
 
 ## Aperiodic Servers
 
-Zarnett goes into a long-winded explanation here. It's basically the optimal way of scheduling aperiodic and sporadic tasks? The jist of it (according to me) is that it handles non-periodic tasks in a similar fashion to the cyclic executive. Just pray that he doesn't ask about this on the final lol. (Although me saying this means he probably will, sadge).
+Basically, design pattern - implement a periodic task that runs aperiodic/sporadic tasks from a queue. This task is called a "***polling server***".
+
+The server gets to run for a fixed interval of time, then gets preempted to run the periodic tasks (kinda like slack time in a cyclic executive). If the non-periodic task gets preempted in this fashion, it will just finish running the next time the server runs.
+
+Can have multiple servers as well. Could make one server a higher priority than another server to give priority to non-periodic tasks.
+
+**Deadline-Deferrable Servers**
+* If the polling server completes all tasks from the queue before it has finished running, it will immediately yield
+* Deadline-deferrable servers will keep running and polling the queue until its interval expires
+
+**Deadline Sporadic Servers**
+* Instead of wasting the execution time polling an empty queue, "save" it for later
+* Can run it later (before the server is "technically" scheduled to run again)
+  * Schedule as slack time between periodic tasks
+* Kinda like Duolingo heart system, but instead of hearts, its execution time for the server
 
 ## Multicore Real-Time Scheduling
 

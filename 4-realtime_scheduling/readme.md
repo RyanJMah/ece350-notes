@@ -112,6 +112,10 @@ Solution is very similar to priority inheritance, $A$ needs to be assigned a tem
 
 Similar to EDF. **Slack time** is the amount of time remaining before a tasks must be scheduled to meet its deadline.
 
+**LIKE EDF, BUT TAKES THE AMOUNT OF TIME A TASK HAS ALREADY BEEN EXECUTING FOR INTO ACCOUNT**
+
+**SLACK TIME IS:** `deadline- remaining_execution_time`
+
 From ECE 455:
 
 * "Slack time is the amount of time remaining before the deadline of a task, minus the remaining execution time of that task"
